@@ -41,6 +41,7 @@ body:
         - 26.1.1
         - 26.1.2
         - 26.2
+        - 26.3
         - My version is not listed :(
     validations:
       required: true
