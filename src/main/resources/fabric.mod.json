@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "potionstacking",
+	"version": "${version}",
+	"name": "potionstacking[server]",
+	"description": "药水可堆叠（默认 16），且纯服务端安装时箱子/漏斗等容器里也能正确显示堆叠数量。",
+	"authors": [
+		"Proxi",
+		"server-side display fix"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/potion-stacking",
+		"sources": "https://github.com/Proxivirus/Potion-Stacking"
+	},
+	"license": "MIT",
+	"icon": "assets/potionstacking/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.proxi.potionstacking.PotionStackingSelfTest"
+		]
+	},
+	"mixins": [
+		"potionstacking.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "1.21.1",
+		"java": ">=21"
+	}
+}

@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.proxi.potionstacking.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MixinItemStack",
+    "MixinClientboundContainerSetSlotPacket",
+    "MixinClientboundContainerSetContentPacket",
+    "MixinAbstractContainerMenu",
+    "MixinContainerMenuAudit",
+    "MixinServerGamePacketListenerImpl",
+    "MixinThrowablePotionItem"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

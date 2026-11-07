@@ -1,0 +1,10 @@
+# 构建产物
+build/
+.gradle/
+logs/
+out/
+*.iml
+.idea/
+
+# 按用户要求：README 暂不发布
+README.md
