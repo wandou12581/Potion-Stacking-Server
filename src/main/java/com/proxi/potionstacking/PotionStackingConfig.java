@@ -14,8 +14,6 @@ import java.nio.file.Path;
 /**
  * 纯服务端用的极简配置：config/potionstacking.json，首次启动自动生成。
  * 不依赖 Cloth Config / ModMenu，服务器上不用多装任何库。
- *
- * <p>拿不到 Fabric 配置目录时（例如在 Gradle 里跑逻辑自检）直接退回默认值。
  */
 public final class PotionStackingConfig {
 	public static final Logger LOG = LoggerFactory.getLogger("potionstacking");
@@ -24,6 +22,13 @@ public final class PotionStackingConfig {
 	public int stackSize = 16;
 	/** 溅射/滞留药水使用后的冷却，单位秒，0 关闭。 */
 	public int throwCooldown = 1;
+	/**
+	 * 对基岩版玩家（Floodgate）把药水栈发送数量压成 1。
+	 * 基岩客户端认为药水上限是 1，发 16 会导致它无法放入容器；压成 1 后操作正常，但基岩端看不到堆叠。
+	 */
+	public boolean bedrockClamp = true;
+	/** 识别基岩玩家的名字前缀（Floodgate 配置的前缀），兜底用；UUID 判断优先。 */
+	public String bedrockNamePrefix = "be.";
 
 	private static PotionStackingConfig instance;
 
@@ -45,6 +50,15 @@ public final class PotionStackingConfig {
 
 	public static int throwCooldownTicks() {
 		return Math.max(0, Math.min(120, get().throwCooldown)) * 20;
+	}
+
+	public static boolean bedrockClamp() {
+		return get().bedrockClamp;
+	}
+
+	public static String bedrockNamePrefix() {
+		String p = get().bedrockNamePrefix;
+		return p == null ? "" : p;
 	}
 
 	private static PotionStackingConfig load() {

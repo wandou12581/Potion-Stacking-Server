@@ -7,9 +7,7 @@ import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-/**
- * 纯逻辑校验：不需要启动游戏，直接验证「组件不会被 PatchedDataComponentMap 规范化掉」这件事。
- */
+/** 纯逻辑校验：不需要启动游戏。 */
 public final class PotionSyncVerify {
 	private static int failures = 0;
 
@@ -17,6 +15,7 @@ public final class PotionSyncVerify {
 		SharedConstants.tryDetectVersion();
 		Bootstrap.bootStrap();
 
+		// ---------------- Java 端：出站补组件 / 入站剥除 ----------------
 		ItemStack potion = new ItemStack(Items.POTION, 16);
 		check("原版原型上限是 1", potion.getMaxStackSize() == 1);
 
@@ -31,11 +30,20 @@ public final class PotionSyncVerify {
 
 		ItemStack back = PotionSync.fromClient(wire);
 		java.util.Optional<?> backMax = back.getComponentsPatch().get(DataComponents.MAX_STACK_SIZE);
-		check("入站把组件清掉（补丁里不再有 max_stack_size）", backMax == null || backMax.isEmpty());
+		check("入站把组件清掉", backMax == null || backMax.isEmpty());
 		check("入站保留数量 16", back.getCount() == 16);
 
-		ItemStack dirt = new ItemStack(Items.DIRT, 5);
-		check("非药水原样返回", PotionSync.toClient(dirt) == dirt);
+		// ---------------- 基岩版：只发 1 个 ----------------
+		ItemStack clamped = PotionSync.clampForBedrock(potion);
+		check("基岩视图把 16 压成 1", clamped.getCount() == 1);
+		check("基岩视图不改原栈", potion.getCount() == 16);
+		check("基岩视图仍认得是药水", clamped.getItem() == Items.POTION);
+
+		ItemStack single = new ItemStack(Items.POTION, 1);
+		check("基岩视图对 1 个原样返回（同一对象）", PotionSync.clampForBedrock(single) == single);
+
+		ItemStack dirt = new ItemStack(Items.DIRT, 16);
+		check("非药水不受基岩视图影响", PotionSync.clampForBedrock(dirt) == dirt);
 
 		if (failures > 0) {
 			System.out.println("FAILED: " + failures + " check(s)");

@@ -10,6 +10,8 @@
     "MixinAbstractContainerMenu",
     "MixinContainerMenuAudit",
     "MixinServerGamePacketListenerImpl",
+    "MixinServerCommonPacketListenerImpl",
+    "MixinServerPlayerGameMode",
     "MixinThrowablePotionItem"
   ],
   "injectors": {
